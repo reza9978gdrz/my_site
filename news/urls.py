@@ -1,7 +1,8 @@
 from news.views import home , about ,contact
 from django.urls import path
+app_name = 'news'
 urlpatterns = [
-    path('', home),
-    path('about',about),
-    path('contact',contact)
+    path('', home , name = 'index'),
+    path('about',about, name = 'about'),
+    path('contact',contact, name = 'contact')
 ]
