@@ -10,12 +10,20 @@ def blog_view(request):
      return render(request,'blog/blog-home.html',context)
 
 def blog_single(request,pid):
+    prev_post = None
+    next_post = None
     post =get_object_or_404(Post , id = pid , status = 1)
+    post_list =list(Post.objects.filter(status = 1))
+    post_index = post_list.index(post)
+    if post_index > 0 :
+        prev_post = post_list[post_index-1]
+    if post_index < len(post_list)-1:
+        next_post = post_list[post_index+1]
     #post = Post.objects.update(count_view=F('count_view')+1)
     # it will be slightly different in your computer
     post.count_view = post.count_view + 1
     post.save()
-    context = {'post':post}
+    context = {'post':post , 'prev_post':prev_post , 'next_post':next_post}
     return render(request,'blog/blog-single.html',context)
 
 def test(request):
