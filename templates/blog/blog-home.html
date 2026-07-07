@@ -1,5 +1,6 @@
 {% extends "J:\PythonProjects\my_site\templates\website\base.html" %}
 {% load static %}
+{% load blog_tags %}
 {% block content%}	
 			<!-- start banner Area -->
 			<section class="banner-area relative blog-home-banner" id="home">	
@@ -90,7 +91,7 @@
 								<div class="col-lg-3  col-md-3 meta-details">
 									<ul class="tags">
 										{% for cat in post.category.all %}
-											<a href="#">{{cat}}</a>{% if not forloop.last %},{% endif %}
+											<a href="{% url 'blog:category' cat_name=cat.name %}">{{cat}}</a>{% if not forloop.last %},{% endif %}
 										{% endfor %}
 										
 									</ul>
@@ -147,7 +148,7 @@
 			                        </form>
 								</div>
 								{% include 'blog/blog-writer.html' %}
-								{% include 'blog/blog-widjet.html' %}
+								{% popular_posts %}
 								<div class="single-sidebar-widget ads-widget">
 									<a href="#"><img class="img-fluid" src="{% static 'img/blog/ads-banner.jpg' %}" alt=""></a>
 								</div>
