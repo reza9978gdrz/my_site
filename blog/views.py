@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from blog.models import Post 
 import datetime as dt
 from django.db.models import F
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 def blog_view(request,cat_name=None, author_name=None):
      posts =Post.objects.filter(status = 1)
      if cat_name:
@@ -11,7 +12,15 @@ def blog_view(request,cat_name=None, author_name=None):
         posts = posts.filter(author__username = author_name)
      else:
          posts = Post.objects.filter(published_date__lte = dt.date.today())
-     
+
+     posts = Paginator(posts,3)
+     page_number = request.GET.get('page')
+     try:
+        posts = posts.get_page(page_number)
+     except PageNotAnInteger:
+         posts = posts.page(1)
+     except EmptyPage:
+         posts = posts.page(1)
      context = {'posts':posts}
      return render(request,'blog/blog-home.html',context)
 

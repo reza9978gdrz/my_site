@@ -1,5 +1,6 @@
 from django import template
 from blog.models import Post,Category
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
 register = template.Library()
 
@@ -35,3 +36,8 @@ def post_categories():
     for name in category:
         cat_dict[name] = posts.filter(category = name).count()
     return {'category':cat_dict}
+
+@register.inclusion_tag('blog/blog-recent-post.html')
+def recent_posts():
+    posts = Post.objects.filter(status=1).order_by('-published_date')[:6]
+    return {'posts':posts}
