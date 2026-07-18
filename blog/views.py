@@ -5,13 +5,13 @@ import datetime as dt
 from django.db.models import F
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 def blog_view(request,cat_name=None, author_name=None):
-     posts =Post.objects.filter(status = 1)
+     posts =Post.objects.filter(status = 1 ,published_date__lte = dt.date.today())
      if cat_name:
         posts = posts.filter(category__name = cat_name)
      elif author_name:
         posts = posts.filter(author__username = author_name)
      else:
-         posts = Post.objects.filter(published_date__lte = dt.date.today())
+         posts = posts
 
      posts = Paginator(posts,3)
      page_number = request.GET.get('page')
@@ -27,8 +27,8 @@ def blog_view(request,cat_name=None, author_name=None):
 def blog_single(request,pid):
     prev_post = None
     next_post = None
-    post =get_object_or_404(Post , id = pid , status = 1)
-    post_list =list(Post.objects.filter(status = 1))
+    post =get_object_or_404(Post , id = pid , status = 1 ,published_date__lte = dt.date.today())
+    post_list =list(Post.objects.filter(status = 1 ,published_date__lte = dt.date.today()))
     post_index = post_list.index(post)
     if post_index > 0 :
         prev_post = post_list[post_index-1]
@@ -46,7 +46,7 @@ def test(request):
 # Create your views here.
 
 def blog_search(request):
-    posts =Post.objects.filter(status = 1)
+    posts =Post.objects.filter(status = 1,published_date__lte = dt.date.today())
     if request.method == 'GET':
        if s:= request.GET.get('s'):
             posts = posts.filter(content__contains= s)

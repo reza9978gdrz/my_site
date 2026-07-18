@@ -1,4 +1,5 @@
 from django import template
+import datetime as dt
 from blog.models import Post,Category
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
@@ -39,5 +40,5 @@ def post_categories():
 
 @register.inclusion_tag('blog/blog-recent-post.html')
 def recent_posts():
-    posts = Post.objects.filter(status=1).order_by('-published_date')[:6]
+    posts = Post.objects.filter(status=1,published_date__lte = dt.date.today()).order_by('-published_date')[:6]
     return {'posts':posts}
