@@ -1,6 +1,7 @@
 from django import template
 import datetime as dt
 from blog.models import Post,Category
+from taggit.models import Tag
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
 register = template.Library()
@@ -42,3 +43,8 @@ def post_categories():
 def recent_posts():
     posts = Post.objects.filter(status=1,published_date__lte = dt.date.today()).order_by('-published_date')[:6]
     return {'posts':posts}
+
+@register.inclusion_tag('blog/blog-posts-tags.html')
+def post_tags():
+    tags = Tag.objects.all()
+    return {'tags':tags}

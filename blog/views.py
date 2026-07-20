@@ -4,12 +4,14 @@ from blog.models import Post
 import datetime as dt
 from django.db.models import F
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
-def blog_view(request,cat_name=None, author_name=None):
+def blog_view(request,cat_name=None, author_name=None , tag_name = None):
      posts =Post.objects.filter(status = 1 ,published_date__lte = dt.date.today())
      if cat_name:
         posts = posts.filter(category__name = cat_name)
      elif author_name:
         posts = posts.filter(author__username = author_name)
+     elif tag_name:
+         posts = posts.filter(tags__name__in=[tag_name])
      else:
          posts = posts
 
