@@ -1,9 +1,11 @@
-from django.shortcuts import render , get_object_or_404
+from django.shortcuts import render , get_object_or_404 , redirect
 from django.http import HttpResponse
-from blog.models import Post 
+from blog.models import Post , Comment
 import datetime as dt
 from django.db.models import F
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from blog.forms import CommentForm
+from django.contrib import messages
 def blog_view(request,cat_name=None, author_name=None , tag_name = None):
      posts =Post.objects.filter(status = 1 ,published_date__lte = dt.date.today())
      if cat_name:
@@ -27,6 +29,7 @@ def blog_view(request,cat_name=None, author_name=None , tag_name = None):
      return render(request,'blog/blog-home.html',context)
 
 def blog_single(request,pid):
+    
     prev_post = None
     next_post = None
     post =get_object_or_404(Post , id = pid , status = 1 ,published_date__lte = dt.date.today())
@@ -40,7 +43,21 @@ def blog_single(request,pid):
     # it will be slightly different in your computer
     post.count_view = post.count_view + 1
     post.save()
-    context = {'post':post , 'prev_post':prev_post , 'next_post':next_post}
+    #comment form 
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'your comment submitted successfully.')
+            return redirect ('blog:single' , pid = post.id )
+        else:
+            messages.error(request, 'Invalid form submission.')
+            messages.error(request, form.errors)
+    else:
+        form = CommentForm()
+
+    comments = Comment.objects.filter(post = post.id , approved = True)
+    context = {'post':post , 'prev_post':prev_post , 'next_post':next_post , 'comments':comments , 'form':form}
     return render(request,'blog/blog-single.html',context)
 
 def test(request):

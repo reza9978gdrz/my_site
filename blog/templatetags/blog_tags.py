@@ -1,6 +1,6 @@
 from django import template
 import datetime as dt
-from blog.models import Post,Category
+from blog.models import Post,Category,Comment
 from taggit.models import Tag
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
@@ -11,6 +11,12 @@ register = template.Library()
 def function():
     posts = Post.objects.filter(status=1).count()
     return posts
+
+@register.simple_tag(name='comment_count')
+def function(pid):
+    post = Post.objects.get(pk=pid)
+    return Comment.objects.filter(post=post.id , approved = True).count()
+
 
 @register.simple_tag(name='posts')
 def function():

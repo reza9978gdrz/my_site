@@ -39,6 +39,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'multi_captcha_admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,6 +49,9 @@ INSTALLED_APPS = [
     'django.contrib.humanize' ,
     'django.contrib.sites',
     'django.contrib.sitemaps',
+
+    'captcha',
+    'django_summernote',
     'django_extensions',
     'robots',
     'debug_toolbar',
@@ -57,6 +61,14 @@ INSTALLED_APPS = [
 ]
 #site framwork
 SITE_ID = 2
+
+#captcha admin settings
+MULTI_CAPTCHA_ADMIN = {
+    'engine': 'simple-captcha',
+}
+
+#summernote
+SUMMERNOTE_THEME = 'bs4'
 
 #host
 ROBOTS_USE_HOST = False
@@ -156,3 +168,4 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
+X_FRAME_OPTIONS = "SAMEORIGIN"
