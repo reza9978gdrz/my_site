@@ -1,11 +1,14 @@
 from django.shortcuts import render , get_object_or_404 , redirect
-from django.http import HttpResponse
+from django.http import HttpResponse , HttpResponseRedirect
 from blog.models import Post , Comment
 import datetime as dt
 from django.db.models import F
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from blog.forms import CommentForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+
 def blog_view(request,cat_name=None, author_name=None , tag_name = None):
      posts =Post.objects.filter(status = 1 ,published_date__lte = dt.date.today())
      if cat_name:
@@ -28,8 +31,9 @@ def blog_view(request,cat_name=None, author_name=None , tag_name = None):
      context = {'posts':posts}
      return render(request,'blog/blog-home.html',context)
 
+#*****************************************************************************************************************
 def blog_single(request,pid):
-    
+
     prev_post = None
     next_post = None
     post =get_object_or_404(Post , id = pid , status = 1 ,published_date__lte = dt.date.today())
@@ -39,10 +43,11 @@ def blog_single(request,pid):
         prev_post = post_list[post_index-1]
     if post_index < len(post_list)-1:
         next_post = post_list[post_index+1]
-    #post = Post.objects.update(count_view=F('count_view')+1)
-    # it will be slightly different in your computer
+
     post.count_view = post.count_view + 1
     post.save()
+    
+    #----------------------------------------------
     #comment form 
     if request.method == "POST":
         form = CommentForm(request.POST)
@@ -58,12 +63,18 @@ def blog_single(request,pid):
 
     comments = Comment.objects.filter(post = post.id , approved = True)
     context = {'post':post , 'prev_post':prev_post , 'next_post':next_post , 'comments':comments , 'form':form}
-    return render(request,'blog/blog-single.html',context)
+    #------------------------------------------------
+    if not post.login_require or request.user.is_authenticated:
+       return render(request,'blog/blog-single.html',context)
+    else:
+       return redirect('accounts:login')
 
+#*****************************************************************************************************************
 def test(request):
     return render(request,"website/test.html")
 # Create your views here.
 
+#*****************************************************************************************************************
 def blog_search(request):
     posts =Post.objects.filter(status = 1,published_date__lte = dt.date.today())
     if request.method == 'GET':

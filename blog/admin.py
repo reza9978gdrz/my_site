@@ -7,7 +7,7 @@ from blog.models import Post , Category , Comment
 class PostAdmin(SummernoteModelAdmin):
     date_hierarchy = 'created_date'
     empty_value_display = '-empty-'
-    list_display = ('title','author','status','count_view','published_date','created_date',)
+    list_display = ('title','author','status','count_view','published_date','created_date','login_require')
     ordering = ['created_date']
     search_fields = ['title','content']
     summernote_fields = ('content',)
