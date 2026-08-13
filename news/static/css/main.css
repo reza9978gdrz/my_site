@@ -4494,3 +4494,14 @@ body.mobile-nav-active #mobile-nav-toggle {
 .footer-text a, .footer-text i {
   color: #f8b600;
 }
+.password-reset-page {
+  min-height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.password-reset-box {
+  width: 100%;
+  max-width: 500px;
+}

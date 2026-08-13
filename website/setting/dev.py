@@ -31,3 +31,5 @@ STATICFILES_DIRE = [
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

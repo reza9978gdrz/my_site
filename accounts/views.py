@@ -1,9 +1,14 @@
 from django.shortcuts import render , redirect
-from django.contrib.auth import authenticate, login , logout
+from django.contrib.auth import  login , logout
 from django.contrib.auth.forms import AuthenticationForm 
-from .forms import  signup_form , EmailorPassword
+from .forms import  signup_form 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.views import PasswordResetView , PasswordResetConfirmView 
+from django.urls import reverse_lazy
+
+UserModel = get_user_model()
 
 def login_view(request):
     if not request.user.is_authenticated:
@@ -16,7 +21,7 @@ def login_view(request):
                     return redirect('/')
             else:
                     messages.error(request, 'Invalid form submission.')
-                    messages.error(request, form.errors)
+                    messages.error(request, "password or username or email was not true")
         
         else:
             form = AuthenticationForm()
@@ -51,5 +56,12 @@ def signup_view(request):
     
     else:
         return redirect('/')
-    
+
+class CustomPasswordResetView(PasswordResetView):
+    success_url = reverse_lazy('accounts:password_reset_done')
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    success_url = reverse_lazy('accounts:password_reset_complete')
+     
+
 # Create your views here.

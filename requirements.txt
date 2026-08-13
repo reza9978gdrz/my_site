@@ -20,6 +20,7 @@ Jinja2==3.1.6
 Markdown==3.10.2
 MarkupSafe==3.0.3
 Pillow==9.5.0
+python-decouple==3.8
 pytz==2026.2
 six==1.17.0
 sqlparse==0.5.5
