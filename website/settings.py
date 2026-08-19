@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
 
+    'compressor',
     'captcha',
     'django_summernote',
     'django_extensions',
@@ -139,6 +140,13 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -170,3 +178,4 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 #maintaince_mood
 MAINTENANCE_MODE = False
+COMPRESS_ENABLED = True
